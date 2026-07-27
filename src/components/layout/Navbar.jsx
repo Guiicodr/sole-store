@@ -11,11 +11,11 @@ function Navbar() {
 
             <Container>
 
-                <div className="flex h-20 items-center justify-between">
+                <div className="flex h-24 items-center justify-between">
 
                     <NavLink
                         to="/"
-                        className="text-2xl font-black tracking-[0.25em]"
+                        className="text-2xl font-black tracking-[0.15em]"
                     >
                         SOLE.
                     </NavLink>
