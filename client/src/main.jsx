@@ -7,19 +7,23 @@ import "./index.css";
 
 import { AuthProvider } from "./context/AuthContext";
 import { CartProvider } from "./context/CartContext";
+import { WishlistProvider } from "./context/WishlistContext";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
 
 import MainLayout from "./layouts/MainLayout";
+import { lazy, Suspense } from "react";
 
-import Home from "./pages/Home";
-import Shop from "./pages/Shop";
-import Collections from "./pages/Collections";
-import About from "./pages/About";
-import Product from "./pages/Product";
-import Cart from "./pages/Cart";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Account from "./pages/Account";
-import Checkout from "./pages/Checkout";
+const Home = lazy(() => import("./pages/Home"));
+const Shop = lazy(() => import("./pages/Shop"));
+const Collections = lazy(() => import("./pages/Collections"));
+const About = lazy(() => import("./pages/About"));
+const Product = lazy(() => import("./pages/Product"));
+const Cart = lazy(() => import("./pages/Cart"));
+const Login = lazy(() => import("./pages/Login"));
+const Register = lazy(() => import("./pages/Register"));
+const Account = lazy(() => import("./pages/Account"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const router = createBrowserRouter([
   {
@@ -36,16 +40,25 @@ const router = createBrowserRouter([
       { path: "register", element: <Register /> },
       { path: "account", element: <Account /> },
       { path: "checkout", element: <Checkout /> },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AuthProvider>
-      <CartProvider>
-        <RouterProvider router={router} />
-        <Toaster
+    <ErrorBoundary>
+      <AuthProvider>
+        <CartProvider>
+          <WishlistProvider>
+            <Suspense fallback={
+              <div className="flex items-center justify-center min-h-screen">
+                <div className="h-10 w-10 animate-spin rounded-full border-2 border-black border-t-transparent" />
+              </div>
+            }>
+              <RouterProvider router={router} />
+            </Suspense>
+            <Toaster
           position="top-center"
           toastOptions={{
             duration: 3000,
@@ -56,7 +69,9 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             },
           }}
         />
-      </CartProvider>
-    </AuthProvider>
-  </React.StrictMode>
-);
+          </WishlistProvider>
+        </CartProvider>
+      </AuthProvider>
+      </ErrorBoundary>
+    </React.StrictMode>
+  );

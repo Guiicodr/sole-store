@@ -21,8 +21,12 @@ router.get("/", (req, res) => {
   const params = [];
 
   if (search) {
-    sql += " AND (LOWER(name) LIKE ? OR LOWER(brand) LIKE ? OR LOWER(description) LIKE ?)";
-    const term = `%${search.toLowerCase()}%`;
+    // Escape SQL LIKE wildcards and sanitize
+    const escapedTerm = search
+      .replace(/[%_]/g, "\\$&")
+      .toLowerCase();
+    sql += " AND (LOWER(name) LIKE ? ESCAPE '\\' OR LOWER(brand) LIKE ? ESCAPE '\\' OR LOWER(description) LIKE ? ESCAPE '\\')";
+    const term = `%${escapedTerm}%`;
     params.push(term, term, term);
   }
 
@@ -37,18 +41,28 @@ router.get("/", (req, res) => {
   }
 
   if (minPrice) {
-    sql += " AND price >= ?";
-    params.push(Number(minPrice));
+    const num = Number(minPrice);
+    if (!isNaN(num) && num >= 0) {
+      sql += " AND price >= ?";
+      params.push(num);
+    }
   }
 
   if (maxPrice) {
-    sql += " AND price <= ?";
-    params.push(Number(maxPrice));
+    const num = Number(maxPrice);
+    if (!isNaN(num) && num >= 0) {
+      sql += " AND price <= ?";
+      params.push(num);
+    }
   }
 
   if (size) {
-    sql += " AND id IN (SELECT product_id FROM product_sizes WHERE size = ? AND stock > 0)";
-    params.push(size);
+    // Only allow numeric sizes (38-45 range)
+    const cleanSize = size.replace(/[^0-9]/g, "");
+    if (cleanSize) {
+      sql += " AND id IN (SELECT product_id FROM product_sizes WHERE size = ? AND stock > 0)";
+      params.push(cleanSize);
+    }
   }
 
   switch (sort) {

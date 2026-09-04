@@ -5,8 +5,13 @@ export function errorHandler(err, _req, res, _next) {
     return res.status(400).json({ error: "Invalid JSON body" });
   }
 
+  if (err.type === "entity.too.large") {
+    return res.status(413).json({ error: "Request body too large" });
+  }
+
   const status = err.status || 500;
-  const message = err.message || "Internal server error";
+  const message =
+    status === 500 ? "Internal server error" : err.message || "Internal server error";
 
   res.status(status).json({ error: message });
 }

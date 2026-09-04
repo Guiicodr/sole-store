@@ -12,6 +12,9 @@ if (!existsSync(dataDir)) {
   mkdirSync(dataDir, { recursive: true });
 }
 
+let db;
+let pendingSave = false;
+
 export function dbAll(sql, params = []) {
   const stmt = db.prepare(sql);
   if (params.length > 0) stmt.bind(params);
@@ -34,8 +37,6 @@ export function dbGet(sql, params = []) {
 export function dbRun(sql, params = []) {
   db.run(sql, params);
 }
-
-let db;
 
 export async function initDatabase() {
   const SQL = await initSqlJs();
@@ -87,9 +88,3 @@ export function saveDatabase() {
   const buffer = Buffer.from(data);
   writeFileSync(dbPath, buffer);
 }
-
-export function getDb() {
-  return db;
-}
-
-export default db;

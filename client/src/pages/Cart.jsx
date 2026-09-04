@@ -2,11 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import Container from "../components/layout/Container";
 import { ShoppingBag, Trash2, Minus, Plus } from "lucide-react";
+import { formatPrice } from "../utils/currency";
 
 function Cart() {
   const { items, updateQuantity, removeItem, getSubtotal, getShipping, getTotal } = useCart();
   const navigate = useNavigate();
-  const formatPrice = (v) => `R$ ${Number(v).toFixed(2).replace(".", ",")}`;
 
   if (items.length === 0) {
     return (

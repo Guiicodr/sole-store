@@ -7,6 +7,7 @@ import Container from "../components/layout/Container";
 import Button from "../components/ui/Button";
 import ProductCard from "../components/product/ProductCard";
 import { ChevronLeft, ShoppingBag } from "lucide-react";
+import { formatPrice } from "../utils/currency";
 
 function Product() {
   const { id } = useParams();
@@ -69,13 +70,6 @@ function Product() {
       </section>
     );
   }
-
-  const formatPrice = (value) =>
-    `R$ ${Number(value).toFixed(2).replace(".", ",")}`;
-const sizeAvailable = (size) => {
-    const s = product.sizes?.find((s) => s.size === size);
-    return s && s.stock > 0;
-  };
 
   const currentPrice = product.discount_price || product.price;
   const hasDiscount = !!product.discount_price;

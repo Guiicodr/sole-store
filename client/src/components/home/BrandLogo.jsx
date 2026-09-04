@@ -1,7 +1,10 @@
-function BrandLogo({ children }) {
-    return (
-        <div
-            className="
+import { Link } from "react-router-dom";
+
+function BrandLogo({ brand }) {
+  return (
+    <Link
+      to={`/shop?brand=${brand.toLowerCase()}`}
+      className="
         text-2xl
         font-black
         tracking-wider
@@ -12,11 +15,12 @@ function BrandLogo({ children }) {
         hover:scale-110
         cursor-pointer
         select-none
+        no-underline
       "
-        >
-            {children}
-        </div>
-    );
+    >
+      {brand}
+    </Link>
+  );
 }
 
 export default BrandLogo;

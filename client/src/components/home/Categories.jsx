@@ -10,11 +10,11 @@ function Categories() {
             <Container>
 
                 <span className="text-sm uppercase tracking-[0.35em] text-gray-400">
-                    Categories
+                    Brands
                 </span>
 
                 <h2 className="mt-3 text-5xl font-black">
-                    Shop by Category
+                    Shop by Brand
                 </h2>
 
                 <div className="mt-12 grid gap-8 md:grid-cols-2">

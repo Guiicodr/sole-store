@@ -6,6 +6,7 @@ import { orders as ordersApi } from "../services/api";
 import toast from "react-hot-toast";
 import Container from "../components/layout/Container";
 import { CreditCard, Truck, ShoppingBag } from "lucide-react";
+import { formatPrice } from "../utils/currency";
 
 function Checkout() {
   const { items, getSubtotal, getShipping, getTotal, clearCart } = useCart();
@@ -18,8 +19,6 @@ function Checkout() {
   const [loading, setLoading] = useState(false);
   const [confirmed, setConfirmed] = useState(null);
   const [cardName, setCardName] = useState("");
-
-  const formatPrice = (v) => `R$ ${Number(v).toFixed(2).replace(".", ",")}`;
 
   if (items.length === 0 && !confirmed) {
     return (

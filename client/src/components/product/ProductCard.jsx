@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import Button from "../ui/Button";
+import { useWishlist } from "../../context/WishlistContext";
+import { formatPrice } from "../../utils/currency";
 
 function ProductCard({ product }) {
-  const formatPrice = (value) =>
-    `R$ ${Number(value).toFixed(2).replace(".", ",")}`;
+  const navigate = useNavigate();
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const wishlisted = isWishlisted(product.id);
 
   const currentPrice = product.discount_price || product.price;
   const hasDiscount = !!product.discount_price;
@@ -13,11 +16,11 @@ function ProductCard({ product }) {
     <Link to={`/product/${product.id}`} className="block group rounded-3xl border border-gray-100 p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
       <div className="relative mb-5 flex h-64 items-center justify-center rounded-2xl bg-gray-50 overflow-hidden">
         <button
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product.id); }}
           className="absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-sm transition hover:scale-110 hover:bg-white"
-          aria-label="Add to wishlist"
+          aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
-          <Heart size={18} className="text-gray-400" />
+          <Heart size={18} className={wishlisted ? "text-red-500 fill-red-500" : "text-gray-400"} />
         </button>
 
         <div className="transition-transform duration-500 group-hover:scale-105">
@@ -49,7 +52,7 @@ function ProductCard({ product }) {
           )}
         </div>
         <Button
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); window.location.href = `/product/${product.id}`; }}
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigate(`/product/${product.id}`); }}
           className="rounded-full px-6 py-2.5 text-xs"
         >
           Buy

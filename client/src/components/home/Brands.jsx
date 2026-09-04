@@ -18,9 +18,7 @@ function Brands() {
                 <div className="flex flex-wrap items-center justify-center gap-14">
 
                     {brands.map((brand) => (
-                        <BrandLogo key={brand}>
-                            {brand}
-                        </BrandLogo>
+                        <BrandLogo key={brand} brand={brand} />
                     ))}
 
                 </div>

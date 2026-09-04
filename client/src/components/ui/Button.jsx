@@ -1,6 +1,7 @@
 import clsx from "clsx";
+import { Link } from "react-router-dom";
 
-function Button({ children, variant = "primary", className = "", ...props }) {
+function Button({ children, variant = "primary", className = "", to, ...props }) {
   const base =
     "inline-flex items-center justify-center rounded-full px-7 py-3.5 text-sm font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black";
 
@@ -14,6 +15,18 @@ function Button({ children, variant = "primary", className = "", ...props }) {
     outline:
       "border border-gray-300 bg-white text-black hover:border-black",
   };
+
+  if (to) {
+    return (
+      <Link
+        to={to}
+        className={clsx(base, variants[variant], className)}
+        {...props}
+      >
+        {children}
+      </Link>
+    );
+  }
 
   return (
     <button

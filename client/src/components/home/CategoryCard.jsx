@@ -1,8 +1,12 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function CategoryCard({ category }) {
     return (
-        <div className="group relative h-[340px] overflow-hidden rounded-3xl cursor-pointer">
+        <Link
+            to={`/shop?brand=${category.name.toLowerCase().replace(/\s+/g, "-")}`}
+            className="group relative h-[340px] overflow-hidden rounded-3xl cursor-pointer block no-underline"
+        >
 
             <img
                 src={category.image}
@@ -28,7 +32,7 @@ function CategoryCard({ category }) {
 
             </div>
 
-        </div>
+        </Link>
     );
 }
 

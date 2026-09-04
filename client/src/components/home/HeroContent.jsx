@@ -24,8 +24,8 @@ function HeroContent() {
         <Link to="/shop">
           <Button>Shop Collection</Button>
         </Link>
-        <Link to="/shop">
-          <Button variant="secondary">Explore</Button>
+        <Link to="/collections">
+          <Button variant="secondary">View Collections</Button>
         </Link>
       </div>
     </div>

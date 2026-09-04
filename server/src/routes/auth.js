@@ -17,7 +17,7 @@ router.post(
       .isLength({ min: 6 })
       .withMessage("Password must be at least 6 characters"),
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ error: errors.array().map((e) => e.msg).join(", ") });
@@ -31,7 +31,7 @@ router.post(
     }
 
     const id = uuidv4();
-    const hashedPassword = bcrypt.hashSync(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     dbRun("INSERT INTO users (id, name, email, password) VALUES (?, ?, ?, ?)", [
       id,
@@ -56,7 +56,7 @@ router.post(
     body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
     body("password").notEmpty().withMessage("Password is required"),
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ error: errors.array().map((e) => e.msg).join(", ") });
@@ -69,7 +69,7 @@ router.post(
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const valid = bcrypt.compareSync(password, user.password);
+    const valid = await bcrypt.compare(password, user.password);
     if (!valid) {
       return res.status(401).json({ error: "Invalid email or password" });
     }

@@ -3,16 +3,7 @@ import { ArrowRight } from "lucide-react";
 import Container from "../components/layout/Container";
 import Button from "../components/ui/Button";
 
-import running from "../assets/images/collections/running.jpg";
-import basketball from "../assets/images/collections/basketball.jpg";
-import lifestyle from "../assets/images/collections/lifestyle.jpg";
-
-const collections = [
-  { id: "running", title: "Running", subtitle: "Engineered for the road ahead.", description: "From daily trainers to race-day performance. Built to keep you moving forward.", image: running, category: "running" },
-  { id: "basketball", title: "Basketball", subtitle: "Born on the court.", description: "The game demands footwear that can keep up. Heritage meets innovation.", image: basketball, category: "basketball" },
-  { id: "lifestyle", title: "Lifestyle", subtitle: "Where comfort meets culture.", description: "Sneakers aren't just for sport. The intersection of streetwear and fashion.", image: lifestyle, category: "lifestyle" },
-  { id: "essentials", title: "Essentials", subtitle: "The foundation of every rotation.", description: "Clean lines. Timeless silhouettes. The sneakers that go with everything.", image: running, category: "lifestyle" },
-];
+import collections from "../data/collections";
 
 function Collections() {
   return (
@@ -68,21 +59,7 @@ function Collections() {
         </Container>
       </section>
 
-      <section className="relative h-[400px] md:h-[500px] overflow-hidden">
-        <img src={collections[3].image} alt={collections[3].title} className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-black/60" />
-        <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
-          <div className="max-w-xl">
-            <span className="text-xs uppercase tracking-[0.3em] text-white/60">Curated Selection</span>
-            <h2 className="mt-4 text-4xl md:text-5xl font-black text-white">{collections[3].title}</h2>
-            <p className="mt-4 text-white/80">{collections[3].description}</p>
-            <Link to="/shop" className="mt-8 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-sm font-semibold text-black transition hover:bg-gray-100">
-              Shop the Collection
-            </Link>
-          </div>
-        </div>
-      </section>
-<section className="section-padding">
+      <section className="section-padding">
         <Container>
           <div className="text-center mb-16">
             <span className="text-xs uppercase tracking-[0.3em] text-gray-400">Browse</span>

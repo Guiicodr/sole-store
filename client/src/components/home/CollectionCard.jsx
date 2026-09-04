@@ -1,14 +1,17 @@
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 function CollectionCard({ collection, large = false }) {
     return (
-        <div
+        <Link
+            to={`/shop?category=${collection.category}`}
             className={`
                 group
                 relative
                 overflow-hidden
                 rounded-[32px]
                 cursor-pointer
+                block no-underline
                 ${large ? "h-[420px] md:col-span-2" : "h-[320px]"}
             `}
         >
@@ -69,7 +72,7 @@ function CollectionCard({ collection, large = false }) {
                     </p>
                 )}
 
-                <button
+                <div
                     className="
                         mt-8
                         flex
@@ -88,10 +91,10 @@ function CollectionCard({ collection, large = false }) {
                         size={22}
                         className="transition-transform duration-300 group-hover:translate-x-1"
                     />
-                </button>
+                </div>
 
             </div>
-        </div>
+        </Link>
     );
 }
 

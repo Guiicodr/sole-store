@@ -5,6 +5,7 @@ import { orders as ordersApi } from "../services/api";
 import toast from "react-hot-toast";
 import Container from "../components/layout/Container";
 import { Package, User, LogOut } from "lucide-react";
+import { formatPrice } from "../utils/currency";
 
 function Account() {
   const { user, loading: authLoading, logout } = useAuth();
@@ -27,7 +28,6 @@ function Account() {
   }, [user]);
 
   const handleLogout = () => { logout(); toast.success("Logged out"); navigate("/"); };
-  const formatPrice = (v) => `R$ ${Number(v).toFixed(2).replace(".", ",")}`;
 
   if (authLoading) {
     return (

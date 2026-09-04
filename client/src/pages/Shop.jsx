@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { products as productsApi } from "../services/api";
 import Container from "../components/layout/Container";
@@ -9,18 +9,40 @@ import ProductGrid from "../components/shop/ProductGrid";
 import { SearchX } from "lucide-react";
 
 function Shop() {
-  const [searchParams] = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get("search") || "");
-  const [brand, setBrand] = useState(searchParams.get("brand") || "");
-  const [category, setCategory] = useState(searchParams.get("category") || "");
-  const [size, setSize] = useState(searchParams.get("size") || "");
-  const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
-  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
-  const [sort, setSort] = useState(searchParams.get("sort") || "newest");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const isFirstRender = useRef(true);
+  const debounceTimer = useRef(null);
+
+  const brand = searchParams.get("brand") || "";
+  const category = searchParams.get("category") || "";
+  const size = searchParams.get("size") || "";
+  const minPrice = searchParams.get("minPrice") || "";
+  const maxPrice = searchParams.get("maxPrice") || "";
+  const sort = searchParams.get("sort") || "newest";
+  const page = Number(searchParams.get("page")) || 1;
+
+  const urlSearch = searchParams.get("search") || "";
+  const [searchInput, setSearchInput] = useState(urlSearch);
+
+  useEffect(() => { setSearchInput(urlSearch); }, [urlSearch]);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      const next = new URLSearchParams(searchParams);
+      if (value) { next.set("search", value); } else { next.delete("search"); }
+      next.set("page", "1");
+      setSearchParams(next, { replace: true });
+    }, 300);
+  };
+
+  const search = urlSearch;
+
   const [products, setProducts] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchProducts = useCallback(async () => {
@@ -45,11 +67,32 @@ function Shop() {
   }, [page, sort, search, brand, category, size, minPrice, maxPrice]);
 
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
-  useEffect(() => { setPage(1); }, [search, brand, category, size, minPrice, maxPrice, sort]);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (page !== 1) {
+      const next = new URLSearchParams(searchParams);
+      next.set("page", "1");
+      setSearchParams(next, { replace: true });
+    }
+  }, [search, brand, category, size, minPrice, maxPrice, sort]);
+
+  const setParam = (key, value) => {
+    const next = new URLSearchParams(searchParams);
+    if (value) { next.set(key, value); } else { next.delete(key); }
+    if (key !== "page") next.set("page", "1");
+    setSearchParams(next, { replace: true });
+  };
 
   const clearFilters = () => {
-    setSearch(""); setBrand(""); setCategory(""); setSize(""); setMinPrice(""); setMaxPrice(""); setSort("newest");
+    setSearchInput("");
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    setSearchParams({}, { replace: true });
   };
+
   const hasFilters = search || brand || category || size || minPrice || maxPrice || sort !== "newest";
 
   return (
@@ -62,16 +105,20 @@ function Shop() {
             <p className="mt-2 text-gray-500">{total} products found</p>
           </div>
           <div className="w-full max-w-md">
-            <SearchBar value={search} onChange={(e) => setSearch(e.target.value)} />
+            <SearchBar value={searchInput} onChange={handleSearchChange} />
           </div>
         </div>
 
         <div className="grid gap-12 lg:grid-cols-[260px_1fr]">
-          <FilterSidebar brand={brand} setBrand={setBrand} category={category} setCategory={setCategory} size={size} setSize={setSize} minPrice={minPrice} setMinPrice={setMinPrice} maxPrice={maxPrice} setMaxPrice={setMaxPrice} />
+          <FilterSidebar brand={brand} setBrand={(v) => setParam("brand", v)}
+            category={category} setCategory={(v) => setParam("category", v)}
+            size={size} setSize={(v) => setParam("size", v)}
+            minPrice={minPrice} setMinPrice={(v) => setParam("minPrice", v)}
+            maxPrice={maxPrice} setMaxPrice={(v) => setParam("maxPrice", v)} />
 
           <div>
             <div className="mb-8 flex items-center justify-between gap-4">
-              <SortSelect value={sort} onChange={(e) => setSort(e.target.value)} />
+              <SortSelect value={sort} onChange={(e) => setParam("sort", e.target.value)} />
               {hasFilters && (
                 <button onClick={clearFilters} className="text-sm text-gray-500 hover:text-black underline">Clear</button>
               )}
@@ -103,11 +150,11 @@ function Shop() {
                 <ProductGrid products={products} />
                 {totalPages > 1 && (
                   <div className="mt-12 flex items-center justify-center gap-2">
-                    <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page <= 1} className="h-10 w-10 rounded-xl border border-gray-200 text-sm font-medium hover:border-black disabled:opacity-40">←</button>
+                    <button onClick={() => setParam("page", String(Math.max(1, page - 1)))} disabled={page <= 1} className="h-10 w-10 rounded-xl border border-gray-200 text-sm font-medium hover:border-black disabled:opacity-40">&larr;</button>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                      <button key={p} onClick={() => setPage(p)} className={`h-10 w-10 rounded-xl text-sm font-medium ${page === p ? "bg-black text-white" : "border border-gray-200 hover:border-black"}`}>{p}</button>
+                      <button key={p} onClick={() => setParam("page", String(p))} className={`h-10 w-10 rounded-xl text-sm font-medium ${page === p ? "bg-black text-white" : "border border-gray-200 hover:border-black"}`}>{p}</button>
                     ))}
-                    <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page >= totalPages} className="h-10 w-10 rounded-xl border border-gray-200 text-sm font-medium hover:border-black disabled:opacity-40">→</button>
+                    <button onClick={() => setParam("page", String(Math.min(totalPages, page + 1)))} disabled={page >= totalPages} className="h-10 w-10 rounded-xl border border-gray-200 text-sm font-medium hover:border-black disabled:opacity-40">&rarr;</button>
                   </div>
                 )}
               </>
