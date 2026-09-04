@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { useAuth } from "./AuthContext";
 
 const WishlistContext = createContext(null);
 
@@ -15,6 +16,7 @@ function loadWishlist() {
 
 export function WishlistProvider({ children }) {
   const [wishlist, setWishlist] = useState(loadWishlist);
+  const { user } = useAuth();
 
   useEffect(() => {
     localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
@@ -26,6 +28,9 @@ export function WishlistProvider({ children }) {
   );
 
   const toggleWishlist = useCallback((productId) => {
+    if (!user) {
+      throw new Error("Please sign in to manage your wishlist");
+    }
     setWishlist((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)

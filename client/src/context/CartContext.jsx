@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { useAuth } from "./AuthContext";
 
 const CartContext = createContext(null);
 
@@ -15,12 +16,16 @@ function loadCart() {
 
 export function CartProvider({ children }) {
   const [items, setItems] = useState(loadCart);
+  const { user } = useAuth();
 
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(items));
   }, [items]);
 
   const addItem = useCallback((product, size, quantity = 1) => {
+    if (!user) {
+      throw new Error("Please sign in to add items to your cart");
+    }
     setItems((prev) => {
       const existing = prev.find(
         (item) => item.product.id === product.id && item.size === size

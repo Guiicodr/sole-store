@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { products as productsApi } from "../services/api";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import toast from "react-hot-toast";
 import Container from "../components/layout/Container";
 import Button from "../components/ui/Button";
@@ -11,7 +12,9 @@ import { formatPrice } from "../utils/currency";
 
 function Product() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { addItem } = useCart();
+  const { user } = useAuth();
   const [product, setProduct] = useState(null);
   const [related, setRelated] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -34,13 +37,22 @@ function Product() {
   }, [id]);
 
   const handleAddToCart = () => {
+    if (!user) {
+      toast.error("Please sign in to add items to your cart");
+      navigate("/login");
+      return;
+    }
     if (!selectedSize) {
       toast.error("Please select a size");
       return;
     }
     setAdding(true);
-    addItem(product, selectedSize, quantity);
-    toast.success("Added to cart!");
+    try {
+      addItem(product, selectedSize, quantity);
+      toast.success("Added to cart!");
+    } catch (err) {
+      toast.error(err.message);
+    }
     setTimeout(() => setAdding(false), 500);
   };
 

@@ -1,12 +1,24 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { useAuth } from "../context/AuthContext";
 import Container from "../components/layout/Container";
+import toast from "react-hot-toast";
 import { ShoppingBag, Trash2, Minus, Plus } from "lucide-react";
 import { formatPrice } from "../utils/currency";
 
 function Cart() {
   const { items, updateQuantity, removeItem, getSubtotal, getShipping, getTotal } = useCart();
+  const { user } = useAuth();
   const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    if (!user) {
+      toast.error("Please sign in to proceed to checkout");
+      navigate("/login");
+      return;
+    }
+    navigate("/checkout");
+  };
 
   if (items.length === 0) {
     return (
@@ -94,7 +106,7 @@ function Cart() {
                 <span>{formatPrice(getTotal())}</span>
               </div>
             </div>
-            <button onClick={() => navigate("/checkout")} className="mt-6 w-full rounded-full bg-black py-4 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95">
+            <button onClick={handleCheckout} className="mt-6 w-full rounded-full bg-black py-4 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-xl active:scale-95">
               Proceed to Checkout
             </button>
           </div>

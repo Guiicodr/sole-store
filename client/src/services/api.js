@@ -27,6 +27,9 @@ export const auth = {
   register: (data) => request("/auth/register", { method: "POST", body: JSON.stringify(data) }),
   login: (data) => request("/auth/login", { method: "POST", body: JSON.stringify(data) }),
   me: () => request("/auth/me"),
+  resetPassword: (data) => request("/auth/reset-password", { method: "PUT", body: JSON.stringify(data) }),
+  forgotPassword: (data) => request("/auth/forgot-password", { method: "POST", body: JSON.stringify(data) }),
+  resetWithCode: (data) => request("/auth/reset-password-with-code", { method: "POST", body: JSON.stringify(data) }),
 };
 
 export const products = {

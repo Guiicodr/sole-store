@@ -51,7 +51,7 @@ export async function initDatabase() {
   db.run("PRAGMA foreign_keys = ON");
 
   db.run(
-    "CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, created_at TEXT DEFAULT (datetime('now')))"
+    "CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, name TEXT NOT NULL, email TEXT NOT NULL UNIQUE, password TEXT NOT NULL, reset_code TEXT, reset_code_expires TEXT, created_at TEXT DEFAULT (datetime('now')))"
   );
 
   db.run(
@@ -78,6 +78,14 @@ export async function initDatabase() {
   } catch (e) {
     // indexes may already exist
   }
+
+  // Migration: add reset_code columns to existing users table
+  try {
+    db.run("ALTER TABLE users ADD COLUMN reset_code TEXT");
+  } catch (e) { /* column already exists */ }
+  try {
+    db.run("ALTER TABLE users ADD COLUMN reset_code_expires TEXT");
+  } catch (e) { /* column already exists */ }
 
   saveDatabase();
   return db;

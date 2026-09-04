@@ -1,13 +1,31 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import Button from "../ui/Button";
+import { useAuth } from "../../context/AuthContext";
 import { useWishlist } from "../../context/WishlistContext";
+import toast from "react-hot-toast";
 import { formatPrice } from "../../utils/currency";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { isWishlisted, toggleWishlist } = useWishlist();
   const wishlisted = isWishlisted(product.id);
+
+  const handleWishlist = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) {
+      toast.error("Please sign in to manage your wishlist");
+      navigate("/login");
+      return;
+    }
+    try {
+      toggleWishlist(product.id);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   const currentPrice = product.discount_price || product.price;
   const hasDiscount = !!product.discount_price;
@@ -16,7 +34,7 @@ function ProductCard({ product }) {
     <Link to={`/product/${product.id}`} className="block group rounded-3xl border border-gray-100 p-5 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg">
       <div className="relative mb-5 flex h-64 items-center justify-center rounded-2xl bg-gray-50 overflow-hidden">
         <button
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggleWishlist(product.id); }}
+          onClick={handleWishlist}
           className="absolute right-3 top-3 z-10 rounded-full bg-white/90 p-2 shadow-sm transition hover:scale-110 hover:bg-white"
           aria-label={wishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
