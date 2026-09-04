@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
   if (search) {
     // Escape SQL LIKE wildcards and sanitize
     const escapedTerm = search
-      .replace(/[%_]/g, "\\$&")
+      .replace(/[%_\\]/g, "\\$&")
       .toLowerCase();
     sql += " AND (LOWER(name) LIKE ? ESCAPE '\\' OR LOWER(brand) LIKE ? ESCAPE '\\' OR LOWER(description) LIKE ? ESCAPE '\\')";
     const term = `%${escapedTerm}%`;
