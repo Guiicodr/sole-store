@@ -1,4 +1,5 @@
-import { X } from "lucide-react";
+import { X, SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
 
 const brands = ["Nike", "Adidas", "Jordan", "New Balance", "Puma", "Asics"];
 const categories = ["lifestyle", "running", "basketball"];
@@ -6,9 +7,10 @@ const sizes = ["38", "39", "40", "41", "42", "43", "44", "45"];
 
 function FilterSidebar({ brand, setBrand, category, setCategory, size, setSize, minPrice, setMinPrice, maxPrice, setMaxPrice }) {
   const activeCount = [brand, category, size, minPrice, maxPrice].filter(Boolean).length;
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  return (
-    <aside className="rounded-3xl border p-6 h-fit lg:sticky lg:top-32">
+  const filterContent = (
+    <>
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-bold">Filters</h3>
         {activeCount > 0 && (
@@ -93,7 +95,41 @@ function FilterSidebar({ brand, setBrand, category, setCategory, size, setSize, 
           />
         </div>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile filter toggle button */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="fixed bottom-6 right-6 z-30 flex items-center gap-2 rounded-full bg-black px-5 py-3 text-sm font-semibold text-white shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl lg:hidden"
+      >
+        <SlidersHorizontal size={16} />
+        Filters{activeCount > 0 ? ` (${activeCount})` : ""}
+      </button>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden lg:block rounded-3xl border p-6 h-fit lg:sticky lg:top-32">
+        {filterContent}
+      </aside>
+
+      {/* Mobile filter drawer */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setMobileOpen(false)} />
+          <div className="absolute right-0 top-0 bottom-0 w-[300px] max-w-[85vw] bg-white overflow-y-auto p-6 shadow-2xl animate-slide-in-right">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold">Filters</h3>
+              <button onClick={() => setMobileOpen(false)} className="p-1 hover:bg-gray-100 rounded-lg transition">
+                <X size={20} />
+              </button>
+            </div>
+            {filterContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 

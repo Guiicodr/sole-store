@@ -6,7 +6,7 @@ function Hero() {
     return (
         <section className="min-h-[90vh] flex items-center py-20">
             <Container>
-                <div className="grid min-h-[85vh] items-center gap-12 lg:grid-cols-2">
+                <div className="grid min-h-[50vh] items-center gap-8 sm:gap-10 md:min-h-[70vh] lg:min-h-[85vh] lg:grid-cols-2">
 
                     <HeroContent />
 

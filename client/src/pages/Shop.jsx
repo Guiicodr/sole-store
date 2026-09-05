@@ -104,6 +104,13 @@ function Shop() {
             <h1 className="mt-3 text-5xl font-black">All Sneakers</h1>
             <p className="mt-2 text-gray-500">{total} products found</p>
           </div>
+{/* Mobile filter info - shows active count on mobile */}
+          <div className="flex items-center gap-2 lg:hidden">
+            <span className="text-sm text-gray-500">{total} products</span>
+            {hasFilters && (
+              <button onClick={clearFilters} className="text-xs text-gray-500 hover:text-black underline ml-auto">Clear</button>
+            )}
+          </div>
           <div className="w-full max-w-md">
             <SearchBar value={searchInput} onChange={handleSearchChange} />
           </div>

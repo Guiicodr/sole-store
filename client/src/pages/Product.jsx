@@ -94,14 +94,14 @@ function Product() {
           Back to Shop
         </Link>
 
-        <div className="grid gap-12 lg:grid-cols-2">
+        <div className="grid gap-8 lg:gap-12 lg:grid-cols-2">
           {/* Image */}
-          <div className="flex items-center justify-center rounded-3xl bg-gray-100 p-12 h-[500px]">
+          <div className="flex items-center justify-center rounded-3xl bg-gray-100 p-6 sm:p-8 md:p-12 h-[300px] sm:h-[400px] md:h-[500px]">
             {product.images?.[0] && (
               <img
                 src={product.images[0]}
                 alt={product.name}
-                className="h-80 object-contain hover:scale-105 transition-transform duration-500"
+                className="h-40 object-contain sm:h-52 md:h-64 lg:h-80 hover:scale-105 transition-transform duration-500"
               />
             )}
           </div>

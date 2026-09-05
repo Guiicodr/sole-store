@@ -5,7 +5,7 @@ function CategoryCard({ category }) {
     return (
         <Link
             to={`/shop?brand=${category.name.toLowerCase().replace(/\s+/g, "-")}`}
-            className="group relative h-[340px] overflow-hidden rounded-3xl cursor-pointer block no-underline"
+            className="group relative h-[200px] sm:h-[260px] md:h-[340px] overflow-hidden rounded-3xl cursor-pointer block no-underline"
         >
 
             <img
@@ -16,13 +16,13 @@ function CategoryCard({ category }) {
 
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
 
-            <div className="absolute bottom-8 left-8 translate-y-4 text-white transition-all duration-500 group-hover:translate-y-0">
+            <div className="absolute bottom-6 left-6 sm:bottom-8 sm:left-8 translate-y-4 text-white transition-all duration-500 group-hover:translate-y-0">
 
-                <h3 className="text-4xl font-black">
+                <h3 className="text-2xl font-black sm:text-3xl md:text-4xl">
                     {category.name}
                 </h3>
 
-                <div className="mt-3 flex items-center gap-2 opacity-0 transition-all duration-500 group-hover:gap-4 group-hover:opacity-100">
+                <div className="mt-2 sm:mt-3 flex items-center gap-2 opacity-0 transition-all duration-500 group-hover:gap-4 group-hover:opacity-100">
 
                     <span>Explore</span>
 

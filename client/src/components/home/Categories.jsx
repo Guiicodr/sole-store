@@ -13,7 +13,7 @@ function Categories() {
                     Brands
                 </span>
 
-                <h2 className="mt-3 text-5xl font-black">
+                <h2 className="mt-3 text-3xl font-black sm:text-4xl md:text-5xl">
                     Shop by Brand
                 </h2>
 

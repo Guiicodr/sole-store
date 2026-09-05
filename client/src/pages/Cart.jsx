@@ -42,29 +42,29 @@ function Cart() {
           <span className="text-sm uppercase tracking-[0.3em] text-gray-500">Cart</span>
           <h1 className="mt-3 text-4xl font-black">Shopping Cart</h1>
         </div>
-        <div className="grid gap-12 lg:grid-cols-[1fr_380px]">
-          <div className="space-y-6">
+        <div className="grid gap-8 lg:grid-cols-[1fr_380px]">
+          <div className="space-y-4 sm:space-y-6">
             {items.map((item, idx) => {
               const price = item.product.discount_price || item.product.price;
               return (
-                <div key={idx} className="flex gap-6 rounded-2xl border p-6">
-                  <div className="h-28 w-28 flex-shrink-0 rounded-xl bg-gray-100 flex items-center justify-center">
+                <div key={idx} className="flex flex-col sm:flex-row gap-4 sm:gap-6 rounded-2xl border p-4 sm:p-6">
+                  <div className="h-24 w-full sm:h-28 sm:w-28 flex-shrink-0 rounded-xl bg-gray-100 flex items-center justify-center">
                     {item.product.images?.[0] && (
-                      <img src={item.product.images[0]} alt={item.product.name} className="h-20 object-contain" />
+                      <img src={item.product.images[0]} alt={item.product.name} className="h-16 sm:h-20 object-contain" />
                     )}
                   </div>
                   <div className="flex flex-1 flex-col justify-between">
                     <div className="flex justify-between gap-4">
                       <div>
-                        <p className="text-sm uppercase tracking-widest text-gray-400">{item.product.brand}</p>
-                        <h3 className="font-bold text-lg mt-1">{item.product.name}</h3>
+                        <p className="text-xs uppercase tracking-widest text-gray-400">{item.product.brand}</p>
+                        <h3 className="font-bold text-base sm:text-lg mt-1">{item.product.name}</h3>
                         <p className="text-sm text-gray-500 mt-1">Size: {item.size}</p>
                       </div>
                       <button onClick={() => removeItem(item.product.id, item.size)} className="text-gray-300 hover:text-red-500 transition">
                         <Trash2 size={20} />
                       </button>
                     </div>
-                    <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center justify-between mt-3 sm:mt-4">
                       <div className="flex items-center gap-3">
                         <button onClick={() => updateQuantity(item.product.id, item.size, item.quantity - 1)} disabled={item.quantity <= 1} className="h-8 w-8 rounded-lg border border-gray-200 flex items-center justify-center transition hover:border-black disabled:opacity-40 disabled:cursor-not-allowed">
                           <Minus size={14} />
@@ -75,7 +75,7 @@ function Cart() {
                         </button>
                       </div>
                       <div className="text-right">
-                        <span className="font-black text-lg">{formatPrice(price * item.quantity)}</span>
+                        <span className="font-black text-base sm:text-lg">{formatPrice(price * item.quantity)}</span>
                         {item.product.discount_price && (
                           <p className="text-xs text-gray-400 line-through">{formatPrice(item.product.price * item.quantity)}</p>
                         )}

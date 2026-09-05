@@ -12,7 +12,7 @@ function CollectionCard({ collection, large = false }) {
                 rounded-[32px]
                 cursor-pointer
                 block no-underline
-                ${large ? "h-[420px] md:col-span-2" : "h-[320px]"}
+                ${large ? "h-[280px] sm:h-[340px] md:h-[420px] md:col-span-2" : "h-[220px] sm:h-[260px] md:h-[320px]"}
             `}
         >
             {/* Imagem */}
@@ -62,12 +62,12 @@ function CollectionCard({ collection, large = false }) {
             {/* Conteúdo */}
             <div className="absolute bottom-8 left-8 z-10">
 
-                <h3 className="text-5xl font-black text-white [text-shadow:0_3px_12px_rgba(0,0,0,.55)]">
+                <h3 className="text-3xl font-black text-white sm:text-4xl md:text-5xl [text-shadow:0_3px_12px_rgba(0,0,0,.55)]">
                     {collection.title}
                 </h3>
 
                 {collection.description && (
-                    <p className="mt-4 max-w-md text-lg text-white/90 [text-shadow:0_2px_8px_rgba(0,0,0,.45)]">
+                    <p className="mt-3 max-w-md text-sm text-white/90 sm:text-base md:text-lg md:mt-4 [text-shadow:0_2px_8px_rgba(0,0,0,.45)]">
                         {collection.description}
                     </p>
                 )}
